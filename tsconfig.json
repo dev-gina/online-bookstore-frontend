@@ -1,18 +1,36 @@
 {
- "compilerOptions": {
-   "target": "ES6",
-   "module": "ESNext",
-   "jsx": "react-jsx",
-   "strict": true,
-   "esModuleInterop": true,
-   "forceConsistentCasingInFileNames": true,
-   "skipLibCheck": true,
-   "moduleResolution": "Node",
-   "baseUrl": "./src",
-   "paths": {
-     "*": ["./*"]
-   }
- },
- "include": ["src"],
- "exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "NodeNext", 
+    "jsx": "preserve",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "moduleResolution": "NodeNext", 
+    "baseUrl": ".",  
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "pages",
+    "components",
+    "styles",
+    "next.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
