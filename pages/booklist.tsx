@@ -95,7 +95,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
       <h1>책 목록</h1>
       <BookForm />
 
-      {/* 📌 검색 기능 추가 */}
+      {/* 검색 기능 추가 */}
       <div className="search-container">
         <input
           type="text"
@@ -128,7 +128,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
         )}
       </ul>
 
-      {/* 📌 페이지네이션 추가 */}
+      {/* 페이지네이션 추가 */}
       <div className="pagination">
         {Array.from({ length: Math.ceil(filteredBooks.length / booksPerPage) }, (_, index) => (
           <button key={index} onClick={() => paginate(index + 1)}>
