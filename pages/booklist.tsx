@@ -16,6 +16,23 @@ interface BookListProps {
 
 const BookList: React.FC<BookListProps> = ({ books }) => {
   const [bookList, setBookList] = useState<Book[]>(books);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [booksPerPage] = useState<number>(10);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filterType, setFilterType] = useState<string>("title");
+
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+
+  // 📌 검색 기능 추가
+  const filteredBooks = bookList.filter((book) =>
+    filterType === "title"
+      ? book.title.toLowerCase().includes(searchTerm.toLowerCase())
+      : book.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleDelete = async (id: number) => {
     try {
@@ -77,9 +94,24 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
     <div className="container">
       <h1>책 목록</h1>
       <BookForm />
+
+      {/* 📌 검색 기능 추가 */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder={`검색어 입력 (${filterType === "title" ? "제목" : "저자"})`}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select onChange={(e) => setFilterType(e.target.value)} value={filterType}>
+          <option value="title">제목</option>
+          <option value="author">저자</option>
+        </select>
+      </div>
+
       <ul className="book-list">
-        {bookList.length > 0 ? (
-          bookList.map((book) => (
+        {currentBooks.length > 0 ? (
+          currentBooks.map((book) => (
             <li key={book.id} className="book-item">
               <span className="book-info">
                 <Link href={`/books/${book.id}`}>{book.title}</Link> - {book.author} ({book.quantity}권)
@@ -95,6 +127,15 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
           <p>책이 없습니다.</p>
         )}
       </ul>
+
+      {/* 📌 페이지네이션 추가 */}
+      <div className="pagination">
+        {Array.from({ length: Math.ceil(filteredBooks.length / booksPerPage) }, (_, index) => (
+          <button key={index} onClick={() => paginate(index + 1)}>
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
