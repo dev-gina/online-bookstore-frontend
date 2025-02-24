@@ -44,7 +44,7 @@ const BookForm: React.FC = () => {
       <input type="text" placeholder="책 제목" value={title} onChange={(e) => setTitle(e.target.value)} />
       <input type="text" placeholder="저자" value={author} onChange={(e) => setAuthor(e.target.value)} />
       <input type="number" placeholder="수량" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
-      <button type="submit">추가</button>
+      <button type="submit" className="custom-add-button">추가</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
