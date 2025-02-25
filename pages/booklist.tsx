@@ -14,7 +14,7 @@ interface BookListProps {
   books: Book[];
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://gina-backend-098d63d3c03d.herokuapp.com"; // ✅ 환경 변수 적용
+const API_BASE_URL = "https://gina-backend-098d63d3c03d.herokuapp.com";
 
 const BookList: React.FC<BookListProps> = ({ books }) => {
   const [bookList, setBookList] = useState<Book[]>(books || []);
