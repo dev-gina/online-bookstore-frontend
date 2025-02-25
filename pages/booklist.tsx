@@ -21,22 +21,23 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filterType, setFilterType] = useState<string>("title");
 
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-
   const filteredBooks = (bookList || []).filter((book) =>
     filterType === "title"
       ? book.title.toLowerCase().includes(searchTerm.toLowerCase())
       : book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+
   useEffect(() => {
-    const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+    // filteredBooks 길이가 바뀔 때만 현재 페이지가 전체 페이지 수를 초과하면 재조정
     if (currentPage > totalPages) {
       setCurrentPage(totalPages || 1);
     }
-  }, [filteredBooks, booksPerPage]);
+  }, [filteredBooks.length, booksPerPage]);
 
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
   const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
 
   const paginate = (pageNumber: number) => {
@@ -53,12 +54,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
       const addedBook: Book = await response.json();
 
-      setBookList((prevBooks) => {
-        const updatedBooks = [...prevBooks, addedBook];
-        const totalPages = Math.ceil(updatedBooks.length / booksPerPage);
-        setCurrentPage(totalPages);
-        return updatedBooks;
-      });
+      setBookList((prevBooks) => [addedBook, ...prevBooks]);
     } catch (error) {
       console.error("책 추가 오류:", error);
     }
@@ -153,13 +149,13 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
       <div className="pagination">
         <button
-          className="pagination-button previous-button"
+          className="previous-button"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
           이전
         </button>
-        {Array.from({ length: Math.ceil(filteredBooks.length / booksPerPage) }, (_, index) => (
+        {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
             className={`pagination-button page-number ${currentPage === index + 1 ? "active" : ""}`}
@@ -169,13 +165,9 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
           </button>
         ))}
         <button
-          className="pagination-button next-button"
-          onClick={() =>
-            setCurrentPage((prev) =>
-              Math.min(prev + 1, Math.ceil(filteredBooks.length / booksPerPage))
-            )
-          }
-          disabled={currentPage === Math.ceil(filteredBooks.length / booksPerPage)}
+          className="next-button"
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
         >
           다음
         </button>
@@ -199,4 +191,3 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return { props: { books: [] } };
   }
 };
-

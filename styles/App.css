@@ -144,14 +144,15 @@ input {
  font-weight: bold;
  border: none;
  border-radius: 5px;
- background-color: black;
- color: white;
+ color: #333;
  cursor: pointer;
  transition: background-color 0.2s ease-in-out;
 }
 
-.pagination button:hover {
- background-color: gray;
+.pagination button.previous-button,
+.pagination button.next-button {
+  background-color: transparent;
+  color: #333;
 }
 
 /* 검색 기능 & 상세 페이지 */
