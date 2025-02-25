@@ -14,7 +14,7 @@ interface BookListProps {
   books: Book[];
 }
 
-const API_BASE_URL = "https://gina-backend-098d63d3c03d.herokuapp.com";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://gina-backend-098d63d3c03d.herokuapp.com";
 
 const BookList: React.FC<BookListProps> = ({ books }) => {
   const [bookList, setBookList] = useState<Book[]>(books || []);
@@ -45,6 +45,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
     setCurrentPage(pageNumber);
   };
 
+  // ✅ 책 추가 
   const handleAddBook = async (newBook: Omit<Book, "id">) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/books`, {
@@ -53,6 +54,8 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
         body: JSON.stringify(newBook),
       });
 
+      if (!response.ok) throw new Error("책 추가 실패");
+
       const addedBook: Book = await response.json();
       setBookList((prevBooks) => [addedBook, ...prevBooks]);
     } catch (error) {
@@ -60,27 +63,32 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
     }
   };
 
+  // ✅ 책 삭제 
   const handleDelete = async (id: number) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/books/${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) {
-        throw new Error("책 삭제 실패");
-      }
+
+      if (!response.ok) throw new Error("책 삭제 실패");
+
       setBookList((prevBooks) => prevBooks.filter((book) => book.id !== id));
     } catch (error) {
       console.error("책 삭제 오류:", error);
     }
   };
 
+  // ✅ 책 수량 증가 
   const handleIncreaseQuantity = async (id: number, quantity: number) => {
     try {
-      await fetch(`${API_BASE_URL}/api/books/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/books/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: quantity + 1 }),
       });
+
+      if (!response.ok) throw new Error("수량 증가 실패");
+
       setBookList((prevBooks) =>
         prevBooks.map((book) =>
           book.id === id ? { ...book, quantity: book.quantity + 1 } : book
@@ -91,14 +99,18 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
     }
   };
 
+  // ✅ 책 수량 감소 
   const handleDecreaseQuantity = async (id: number, quantity: number) => {
     if (quantity > 0) {
       try {
-        await fetch(`${API_BASE_URL}/api/books/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/books/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ quantity: quantity - 1 }),
         });
+
+        if (!response.ok) throw new Error("수량 감소 실패");
+
         setBookList((prevBooks) =>
           prevBooks.map((book) =>
             book.id === id ? { ...book, quantity: book.quantity - 1 } : book
@@ -178,6 +190,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
 export default BookList;
 
+// ✅ 초기 데이터
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const res = await fetch(`${API_BASE_URL}/api/books`);
