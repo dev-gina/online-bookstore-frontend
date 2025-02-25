@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import BookForm from "@/components/BookForm";
@@ -15,7 +15,7 @@ interface BookListProps {
 }
 
 const BookList: React.FC<BookListProps> = ({ books }) => {
-  const [bookList, setBookList] = useState<Book[]>(books);
+  const [bookList, setBookList] = useState<Book[]>(books || []);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [booksPerPage] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -24,15 +24,45 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
 
-  // 📌 검색 기능 추가
-  const filteredBooks = bookList.filter((book) =>
+  const filteredBooks = (bookList || []).filter((book) =>
     filterType === "title"
       ? book.title.toLowerCase().includes(searchTerm.toLowerCase())
       : book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+  }, [filteredBooks, booksPerPage]);
+
   const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleAddBook = async (newBook: Omit<Book, "id">) => {
+    try {
+      const response = await fetch("http://127.0.0.1:5001/api/books", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newBook),
+      });
+
+      const addedBook: Book = await response.json();
+
+      setBookList((prevBooks) => {
+        const updatedBooks = [...prevBooks, addedBook];
+        const totalPages = Math.ceil(updatedBooks.length / booksPerPage);
+        setCurrentPage(totalPages);
+        return updatedBooks;
+      });
+    } catch (error) {
+      console.error("책 추가 오류:", error);
+    }
+  };
 
   const handleDelete = async (id: number) => {
     try {
@@ -50,14 +80,11 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
   const handleIncreaseQuantity = async (id: number, quantity: number) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
+      await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: quantity + 1 }),
       });
-      if (!response.ok) {
-        throw new Error("수량 증가 실패");
-      }
       setBookList((prevBooks) =>
         prevBooks.map((book) =>
           book.id === id ? { ...book, quantity: book.quantity + 1 } : book
@@ -71,14 +98,11 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
   const handleDecreaseQuantity = async (id: number, quantity: number) => {
     if (quantity > 0) {
       try {
-        const response = await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
+        await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ quantity: quantity - 1 }),
         });
-        if (!response.ok) {
-          throw new Error("수량 감소 실패");
-        }
         setBookList((prevBooks) =>
           prevBooks.map((book) =>
             book.id === id ? { ...book, quantity: book.quantity - 1 } : book
@@ -93,9 +117,8 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
   return (
     <div className="container">
       <h1>책 목록</h1>
-      <BookForm />
+      <BookForm onAddBook={handleAddBook} />
 
-      {/* 검색 기능 추가 */}
       <div className="search-container">
         <input
           type="text"
@@ -128,13 +151,34 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
         )}
       </ul>
 
-      {/* 페이지네이션 추가 */}
       <div className="pagination">
+        <button
+          className="pagination-button previous-button"
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          이전
+        </button>
         {Array.from({ length: Math.ceil(filteredBooks.length / booksPerPage) }, (_, index) => (
-          <button key={index} onClick={() => paginate(index + 1)}>
+          <button
+            key={index}
+            className={`pagination-button page-number ${currentPage === index + 1 ? "active" : ""}`}
+            onClick={() => paginate(index + 1)}
+          >
             {index + 1}
           </button>
         ))}
+        <button
+          className="pagination-button next-button"
+          onClick={() =>
+            setCurrentPage((prev) =>
+              Math.min(prev + 1, Math.ceil(filteredBooks.length / booksPerPage))
+            )
+          }
+          disabled={currentPage === Math.ceil(filteredBooks.length / booksPerPage)}
+        >
+          다음
+        </button>
       </div>
     </div>
   );
@@ -155,3 +199,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return { props: { books: [] } };
   }
 };
+
