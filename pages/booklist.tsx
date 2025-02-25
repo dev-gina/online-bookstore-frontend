@@ -30,7 +30,6 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
 
   useEffect(() => {
-    // filteredBooks 길이가 바뀔 때만 현재 페이지가 전체 페이지 수를 초과하면 재조정
     if (currentPage > totalPages) {
       setCurrentPage(totalPages || 1);
     }
