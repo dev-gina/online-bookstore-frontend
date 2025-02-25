@@ -14,6 +14,8 @@ interface BookListProps {
   books: Book[];
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://gina-backend-098d63d3c03d.herokuapp.com"; // ✅ 환경 변수 적용
+
 const BookList: React.FC<BookListProps> = ({ books }) => {
   const [bookList, setBookList] = useState<Book[]>(books || []);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -45,14 +47,13 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
   const handleAddBook = async (newBook: Omit<Book, "id">) => {
     try {
-      const response = await fetch("http://127.0.0.1:5001/api/books", {
+      const response = await fetch(`${API_BASE_URL}/api/books`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newBook),
       });
 
       const addedBook: Book = await response.json();
-
       setBookList((prevBooks) => [addedBook, ...prevBooks]);
     } catch (error) {
       console.error("책 추가 오류:", error);
@@ -61,7 +62,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/books/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -75,7 +76,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
 
   const handleIncreaseQuantity = async (id: number, quantity: number) => {
     try {
-      await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
+      await fetch(`${API_BASE_URL}/api/books/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: quantity + 1 }),
@@ -93,7 +94,7 @@ const BookList: React.FC<BookListProps> = ({ books }) => {
   const handleDecreaseQuantity = async (id: number, quantity: number) => {
     if (quantity > 0) {
       try {
-        await fetch(`http://127.0.0.1:5001/api/books/${id}`, {
+        await fetch(`${API_BASE_URL}/api/books/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ quantity: quantity - 1 }),
@@ -179,7 +180,7 @@ export default BookList;
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const res = await fetch("http://127.0.0.1:5001/api/books");
+    const res = await fetch(`${API_BASE_URL}/api/books`);
     if (!res.ok) {
       throw new Error(`HTTP error! Status: ${res.status}`);
     }
