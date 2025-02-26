@@ -3,15 +3,10 @@
   publish = ".next"
 
 [[redirects]]
-  from = "/books/*"
+  from = "/*"
   to = "/.netlify/functions/next"
   status = 200
   force = true
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    cache-control = "public, max-age=0, must-revalidate"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
