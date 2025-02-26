@@ -13,6 +13,10 @@ interface BookDetailProps {
 }
 
 const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
+  if (!book) {
+    return <div>책 정보를 불러올 수 없습니다.</div>;
+  }
+
   return (
     <div className="container">
       <h1>{book.title}</h1>
@@ -22,14 +26,28 @@ const BookDetail: React.FC<BookDetailProps> = ({ book }) => {
   );
 };
 
+export default BookDetail; 
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params!;
-  const res = await fetch(`http://127.0.0.1:5001/api/books/${id}`);
-  if (!res.ok) {
+  const { id } = context.params ?? {}; 
+
+  if (!id) {
     return { notFound: true };
   }
-  const book: Book = await res.json();
-  return { props: { book } };
-};
 
-export default BookDetail;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:5001";
+  
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/books/${id}`);
+
+    if (!res.ok) {
+      return { notFound: true };
+    }
+
+    const book: Book = await res.json();
+    return { props: { book } };
+  } catch (error) {
+    console.error("데이터 가져오기 오류:", error);
+    return { notFound: true };
+  }
+};
