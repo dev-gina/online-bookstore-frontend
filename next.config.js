@@ -14,6 +14,16 @@ const nextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: "/books/:path*", //여기만 비활성화
+        headers: [
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
