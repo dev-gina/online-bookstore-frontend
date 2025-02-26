@@ -1,212 +1,226 @@
 body {
- display: flex;
- justify-content: center;
- align-items: flex-start;
- height: 100vh;
- background-color: white;
- color: black;
- font-family: Arial, sans-serif;
- margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  background-color: white;
+  color: black;
+  font-family: Arial, sans-serif;
+  margin: 0;
 }
 
 .container {
- width: 600px;
- display: flex;
- flex-direction: column;
- align-items: center;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1, h2 {
- text-align: left;
- width: 100%;
- margin-bottom: 15px;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 form {
- display: flex;
- flex-direction: column;
- width: 100%;
- gap: 12px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
 }
 
 input {
- padding: 12px;
- font-size: 16px;
- border: 1px solid #ccc;
- border-radius: 5px;
- background-color: white;
- color: black;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
 }
 
 /* //////////////////////////////////////////// */
 
 .custom-add-button {
- height: 60px;
- background-color: #333;
- color: white;
- padding: 10px 16px;
- border: none;
- border-radius: 5px;
- font-size: 15px;
- cursor: pointer;
- margin: 8px 0 20px 0;
+  height: 60px;
+  background-color: #333;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 8px 0 20px 0;
 }
 
 .add-button {
- width: 600px;
- height: 50px;
- background-color: black;
- color: white;
- border: none;
- border-radius: 5px;
- cursor: pointer;
- font-size: 16px;
- font-weight: bold;
- display: flex;
- justify-content: center;
- align-items: center;
+  width: 600px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .add-button:hover {
- background-color: gray;
+  background-color: gray;
 }
 
 .btn.btn-add {
- height: 50px;
- background-color: black;
- color: white;
- border: none; 
- border-radius: 5px;
- cursor: pointer;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* 책 목록 */
 .book-list {
- width: 100%;
- padding: 0;
- margin: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .book-list ul {
- list-style: none;
- padding: 0;
- margin: 0;
- width: 100%;
- display: flex;
- flex-direction: column;
- align-items: flex-start;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* 개별 항목 */
 .book-item {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 15px;
- border-bottom: 1px solid #ccc;
- background-color: white;
- border-radius: 5px;
- margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  background-color: white;
+  border-radius: 5px;
 }
 
 .book-info {
- flex: 1;
- text-align: left;
- font-size: 16px;
- font-weight: 500;
- color: #333;
+  flex: 1;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
 }
 
 .book-actions {
- display: flex;
- justify-content: flex-end;
- align-items: center;
- gap: 10px;
- min-width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  width: 220px; 
+  gap: 10px;
 }
 
-.delete-button, .increase-button, .decrease-button {
- width: 60px;
- padding: 10px 10px;
- font-size: 12px;
- background-color: #f0f0f0;
- color: #333;
- font-weight: bold;
- border: none;
- border-radius: 5px;
- cursor: pointer;
- transition: background-color 0.2s ease-in-out;
+.action-button {
+  width: 50px;
+  height: 30px;
+  padding: 10px 0;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-button {
+  background-color: black;
+  color: #f0f0f0;
+  font-size: 10px;
+}
+
+.increase-button,
+.decrease-button {
+  background-color: #f0f0f0;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .pagination {
- display: flex;
- justify-content: center;
- margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  background-color: #fff;
 }
 
 .pagination button {
- width: 30px;
- height: 30px;
- margin: 2px;
- font-size: 10px;
- font-weight: bold;
- border: none;
- border-radius: 5px;
- color: #333;
- cursor: pointer;
- transition: background-color 0.2s ease-in-out;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  font-size: 10px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .pagination button.previous-button,
 .pagination button.next-button {
-  background-color: transparent;
   color: #333;
 }
 
 /* 검색 기능 & 상세 페이지 */
 .search-container {
- display: flex;
- justify-content: flex-end;
- width: 100%;
- gap: 10px;
- margin-top: 20px;
- margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+  width: 600px;
+  gap: 10px;
+  margin: 20px 0 20px 0;
 }
 
 .search-container input {
- flex: 1;
- padding: 10px;
- font-size: 16px;
- border: 1px solid #ccc;
- border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .search-container select {
- padding: 10px;
- font-size: 16px;
- border: 1px solid #ccc;
- border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
+/* 책 상세 페이지 */
 .book-detail-container {
- width: 600px;
- padding: 20px;
- border: 1px solid #ddd;
- border-radius: 10px;
- background-color: #fff;
- text-align: left;
+  width: 600px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+  text-align: left;
 }
 
 .back-button {
- display: inline-block;
- margin-top: 20px;
- padding: 10px 15px;
- background-color: black;
- color: white;
- text-decoration: none;
- border-radius: 5px;
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
 }
 
 .back-button:hover {
- background-color: gray;
+  background-color: gray;
 }
