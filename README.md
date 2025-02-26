@@ -14,7 +14,7 @@
 
 
 2. 소스 빌드 및 실행 방법
-C:\web_gina\rgt-frontend-test\online-bookstore-frontend>
+C:\web_gina\final-front\online-bookstore-frontend>
 npm run dev
 http://localhost:3000
 
